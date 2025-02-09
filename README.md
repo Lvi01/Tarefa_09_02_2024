@@ -90,8 +90,8 @@ void gpio_irq_handler(uint gpio, uint32_t events) {
     if (current_time - last_time > 200000) {
         last_time = current_time;
         if (gpio == button_A) {
-            gpio_put(ledRed_pin, !gpio_get(ledRed_pin));
-            printf("LED VERMELHO alterado\n");
+            gpio_put(ledGreen_pin, !gpio_get(ledGreen_pin));
+            printf("LED VERDE alterado\n");
         } else if (gpio == button_B) {
             gpio_put(ledBlue_pin, !gpio_get(ledBlue_pin));
             printf("LED AZUL alterado\n");
@@ -146,5 +146,5 @@ int main() {
 Este projeto demonstra o uso de **UART, I2C, LEDs e interrupções** em um **RP2040**. O código é modular, organizado e segue as melhores práticas de programação para microcontroladores.
 
 ## Contato
-✉️ **Email:** levi.silva@example.com
+✉️ **Email:** lsfreitas218@gmail.com
 

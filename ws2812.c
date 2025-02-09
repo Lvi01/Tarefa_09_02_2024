@@ -256,24 +256,24 @@ void gpio_irq_handler(uint gpio, uint32_t events)
         // Verifica qual botão foi pressionado, com base na GPIO de entrada, e atualiza o estado do LED que está relacionado a ele
         switch (gpio){
         case 5:
-            state = gpio_get(ledRed_pin); // Obtém o estado do LED vermelho
+            state = gpio_get(ledGreen_pin); // Obtém o estado do LED verde
             printf("Botão A pressionado\n");
-            printf("Mudando o estado do LED vermelho\n");
+            printf("Mudando o estado do LED verde\n");
             if(!state) // Verifica se o LED está ligado
             {
-                printf("LED vermelho ligado\n");
+                printf("LED verde ligado\n");
                 ssd1306_fill(&ssd, false);                        // Limpa o display
-                ssd1306_draw_string(&ssd, "LED VERMELHO", 0, 0); // Desenha uma string
+                ssd1306_draw_string(&ssd, "LED VERDE", 0, 0); // Desenha uma string
                 ssd1306_draw_string(&ssd, "LIGADO", 0, 20);     // Desenha uma string
             }
             else // Caso o LED esteja desligado
             {
-                printf("LED vermelho desligado\n");
+                printf("LED verde desligado\n");
                 ssd1306_fill(&ssd, false);                        // Limpa o display
-                ssd1306_draw_string(&ssd, "LED VERMELHO", 0, 0); // Desenha uma string
+                ssd1306_draw_string(&ssd, "LED VERDE", 0, 0); // Desenha uma string
                 ssd1306_draw_string(&ssd, "DESLIGADO", 0, 20);  // Desenha uma string
             }
-            gpio_put(ledRed_pin, !state); // Muda o estado do LED vermelho
+            gpio_put(ledGreen_pin, !state); // Muda o estado do LED verde
             ssd1306_send_data(&ssd); // Atualiza o display
             break;
         case 6:
