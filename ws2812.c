@@ -21,7 +21,7 @@
 #define I2C_PORT i2c1     // Define a porta I2C utilizada
 #define I2C_SDA 14       // Define o pino SDA
 #define I2C_SCL 15      // Define o pino SCL
-#define endereco 0x3C  // Endereço do display OLED
+#define ENDERECO 0x3C  // Endereço do display OLED
 
 // Pinos para controle do LED e botões
 const uint ledRed_pin = 13;     // Red => GPIO13
@@ -216,7 +216,7 @@ bool init_components(){
     gpio_pull_up(button_B);           // Habilita o pull-up interno
 
     // I2C inicialização e configuração do display OLED SSD1306 128x64 pixels com endereço 0x3C e 400 KHz
-    ssd1306_init(&ssd, WIDTH, HEIGHT, false, endereco, I2C_PORT); // Inicializa o display OLED
+    ssd1306_init(&ssd, WIDTH, HEIGHT, false, ENDERECO, I2C_PORT); // Inicializa o display OLED
     i2c_init(I2C_PORT, 400 * 1000); // Inicializa o I2C com 400 KHz
 
     gpio_set_function(I2C_SDA, GPIO_FUNC_I2C);  // Set the GPIO pin function to I2C
