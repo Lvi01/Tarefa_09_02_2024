@@ -45,7 +45,7 @@ Foram definidas constantes para **pinos GPIO** e configurações de hardware:
 #define WS2812_PIN 7
 #define I2C_SDA 14
 #define I2C_SCL 15
-#define endereco 0x3C
+#define ENDERECO 0x3C
 ```
 
 ### 3. Variáveis Globais
