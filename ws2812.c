@@ -11,10 +11,10 @@
 #include "pico/stdlib.h"        // Inclusão da biblioteca de funções padrão do Pico
 #include "hardware/pio.h"      // Inclusão da biblioteca de funções do PIO
 #include "hardware/clocks.h"  // Inclusão da biblioteca de funções de clock
-#include "hardware/i2c.h"     // Inclusão da biblioteca de funções do I2C
-#include "ws2812.pio.h"      // Inclusão da biblioteca de funções do WS2812B
-#include "inc/ssd1306.h"
-#include "inc/font.h"
+#include "hardware/i2c.h"    // Inclusão da biblioteca de funções do I2C
+#include "ws2812.pio.h"     // Inclusão da biblioteca de funções do WS2812B
+#include "inc/ssd1306.h"   // Inclusão da biblioteca de funções de display e configuração do OLED
+#include "inc/font.h"     // Inclusão da biblioteca de funções de fonte
 
 // Definições de constantes utilizadas no programa
 #define IS_RGBW false          // Define se a matriz é RGB ou RGBW
@@ -22,10 +22,10 @@
 #define NUMBERS 10           // Quantidade de números que aparecerão na matriz
 #define WS2812_PIN 7        // GPIO7 responsável pela comunicação com a matriz de LEDs
 #define TEMPO 200          // Tempo de espera em ms, faz com que o LED Vermelho pisque 5 vezes por segundo
-#define I2C_PORT i2c1
-#define I2C_SDA 14
-#define I2C_SCL 15
-#define endereco 0x3C
+#define I2C_PORT i2c1     // Define a porta I2C utilizada
+#define I2C_SDA 14       // Define o pino SDA
+#define I2C_SCL 15      // Define o pino SCL
+#define endereco 0x3C  // Endereço do display OLED
 
 // Pinos para controle do LED e botões
 const uint ledRed_pin = 13;     // Red => GPIO13
@@ -219,20 +219,20 @@ bool init_components(){
     gpio_set_dir(button_B, GPIO_IN);   // Configura o pino como entrada
     gpio_pull_up(button_B);           // Habilita o pull-up interno
 
-    // I2C Initialisation. Using it at 400Khz.
-    i2c_init(I2C_PORT, 400 * 1000);
+    // I2C inicialização e configuração do display OLED SSD1306 128x64 pixels com endereço 0x3C e 400 KHz
+    ssd1306_init(&ssd, WIDTH, HEIGHT, false, endereco, I2C_PORT); // Inicializa o display OLED
+    i2c_init(I2C_PORT, 400 * 1000); // Inicializa o I2C com 400 KHz
 
-    gpio_set_function(I2C_SDA, GPIO_FUNC_I2C); // Set the GPIO pin function to I2C
+    gpio_set_function(I2C_SDA, GPIO_FUNC_I2C);  // Set the GPIO pin function to I2C
     gpio_set_function(I2C_SCL, GPIO_FUNC_I2C); // Set the GPIO pin function to I2C
-    gpio_pull_up(I2C_SDA); // Pull up the data line
-    gpio_pull_up(I2C_SCL); // Pull up the clock line
-    ssd1306_init(&ssd, WIDTH, HEIGHT, false, endereco, I2C_PORT); // Inicializa o display
-    ssd1306_config(&ssd); // Configura o display
-    ssd1306_send_data(&ssd); // Envia os dados para o display
+    gpio_pull_up(I2C_SDA);                    // Pull up the data line
+    gpio_pull_up(I2C_SCL);                   // Pull up the clock line
+    ssd1306_config(&ssd);                   // Configura o display
+    ssd1306_send_data(&ssd);               // Envia os dados para o display
 
     // Limpa o display. O display inicia com todos os pixels apagados.
-    ssd1306_fill(&ssd, false);
-    ssd1306_send_data(&ssd);
+    ssd1306_fill(&ssd, false); // Limpa o display
+    ssd1306_send_data(&ssd);  // Atualiza o display
 
     return true;
 }
@@ -249,8 +249,8 @@ static inline void put_pixel(uint32_t pixel_grb) {
 void gpio_irq_handler(uint gpio, uint32_t events)
 {
     // Obtém o tempo atual em microssegundos
-    uint32_t current_time = to_us_since_boot(get_absolute_time());
-    bool state = false;
+    uint32_t current_time = to_us_since_boot(get_absolute_time()); // Obtém o tempo atual em microssegundos
+    bool state = false; // Estado do LED
 
     // Verifica se passou tempo suficiente desde o último evento, para evitar o debouncing
     if (current_time - last_time > 200000) // 200 ms de debouncing
@@ -263,19 +263,19 @@ void gpio_irq_handler(uint gpio, uint32_t events)
             state = gpio_get(ledRed_pin); // Obtém o estado do LED vermelho
             printf("Botão A pressionado\n");
             printf("Mudando o estado do LED vermelho\n");
-            if(!state)
+            if(!state) // Verifica se o LED está ligado
             {
                 printf("LED vermelho ligado\n");
-                ssd1306_fill(&ssd, false); // Limpa o display
+                ssd1306_fill(&ssd, false);                        // Limpa o display
                 ssd1306_draw_string(&ssd, "LED VERMELHO", 0, 0); // Desenha uma string
-                ssd1306_draw_string(&ssd, "LIGADO", 0, 20); // Desenha uma string
+                ssd1306_draw_string(&ssd, "LIGADO", 0, 20);     // Desenha uma string
             }
-            else
+            else // Caso o LED esteja desligado
             {
                 printf("LED vermelho desligado\n");
-                ssd1306_fill(&ssd, false); // Limpa o display
+                ssd1306_fill(&ssd, false);                        // Limpa o display
                 ssd1306_draw_string(&ssd, "LED VERMELHO", 0, 0); // Desenha uma string
-                ssd1306_draw_string(&ssd, "DESLIGADO", 0, 20); // Desenha uma string
+                ssd1306_draw_string(&ssd, "DESLIGADO", 0, 20);  // Desenha uma string
             }
             gpio_put(ledRed_pin, !state); // Muda o estado do LED vermelho
             ssd1306_send_data(&ssd); // Atualiza o display
@@ -284,22 +284,22 @@ void gpio_irq_handler(uint gpio, uint32_t events)
             state = gpio_get(ledBlue_pin); // Obtém o estado do LED azul
             printf("Botão b pressionado\n");
             printf("Mudando o estado do LED azul\n");
-            if(!state)
+            if(!state) // Verifica se o LED está ligado
             {
                 printf("LED azul ligado\n");
                 ssd1306_fill(&ssd, false); // Limpa o display
                 ssd1306_draw_string(&ssd, "LED AZUL     ", 0, 0); // Desenha uma string
                 ssd1306_draw_string(&ssd, "LIGADO", 0, 20); // Desenha uma string
             }
-            else
+            else // Caso o LED esteja desligado
             {
                 printf("LED azul desligado\n");
-                ssd1306_fill(&ssd, false); // Limpa o display
+                ssd1306_fill(&ssd, false);                         // Limpa o display
                 ssd1306_draw_string(&ssd, "LED AZUL     ", 0, 0); // Desenha uma string
-                ssd1306_draw_string(&ssd, "DESLIGADO", 0, 20); // Desenha uma string
+                ssd1306_draw_string(&ssd, "DESLIGADO", 0, 20);   // Desenha uma string
             }
             gpio_put(ledBlue_pin, !state); // Muda o estado do LED azul
-            ssd1306_send_data(&ssd); // Atualiza o display
+            ssd1306_send_data(&ssd);      // Atualiza o display
             break;
         default:
             break;
@@ -316,7 +316,7 @@ void set_led_pattern(uint8_t r, uint8_t g, uint8_t b, int displayed_number)
     for (int i = 0; i < NUM_PIXELS; i++)
     {
         if (led_buffer[displayed_number][i]) // Verifica se o LED deve ser ligado e qual número ele representa
-            put_pixel(color); // Liga o LED com um no buffer
+            put_pixel(color);               // Liga o LED com um no buffer
         else
             put_pixel(0);  // Desliga os LEDs com zero no buffer
     }
@@ -325,20 +325,20 @@ void set_led_pattern(uint8_t r, uint8_t g, uint8_t b, int displayed_number)
 void processar_comando(char comando) {
     if(!(comando >= '0' && comando <= '9' || comando >= 'A' && comando <= 'Z' || comando >= 'a' && comando <= 'z')) // Verifica se o comando é um número ou uma letra
     {
-        printf("Char inválido\n"); // Exibe uma mensagem de erro
-        ssd1306_fill(&ssd, false); // Limpa o display
-        ssd1306_draw_string(&ssd, "ERRO", 0, 0); // Desenha uma string
-        ssd1306_draw_string(&ssd, "CHAR", 0, 20); // Desenha uma string
+        printf("Char inválido\n");                        // Exibe uma mensagem de erro
+        ssd1306_fill(&ssd, false);                       // Limpa o display
+        ssd1306_draw_string(&ssd, "ERRO", 0, 0);        // Desenha uma string
+        ssd1306_draw_string(&ssd, "CHAR", 0, 20);      // Desenha uma string
         ssd1306_draw_string(&ssd, "INVALIDO", 0, 40); // Desenha uma string
-        ssd1306_send_data(&ssd); // Atualiza o display
+        ssd1306_send_data(&ssd);                     // Atualiza o display
         return;
     }
-    printf("Char recebido: %c\n", comando); // Exibe o comando recebido
-    ssd1306_fill(&ssd, false); // Limpa o display
-    ssd1306_draw_string(&ssd, "CHAR RECEBIDO", 0, 0); // Desenha uma string
-    ssd1306_draw_char(&ssd, comando, 60, 32); // Desenha um caractere
-    ssd1306_send_data(&ssd); // Atualiza o display
-    if(comando >= '0' && comando <= '9') // Verifica se o comando é um número
+    printf("Char recebido: %c\n", comando);               // Exibe o comando recebido
+    ssd1306_fill(&ssd, false);                           // Limpa o display
+    ssd1306_draw_string(&ssd, "CHAR RECEBIDO", 0, 0);   // Desenha uma string
+    ssd1306_draw_char(&ssd, comando, 60, 32);          // Desenha um caractere
+    ssd1306_send_data(&ssd);                          // Atualiza o display
+    if(comando >= '0' && comando <= '9')             // Verifica se o comando é um número
     {
         switch(comando)
         {
