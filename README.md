@@ -7,7 +7,7 @@
 **02 de fevereiro de 2025**
 
 ## Link de entrega
-Link:
+Link: https://youtube.com/shorts/EytLdvitqN0?feature=share
 
 ## Descrição do Projeto
 Este projeto visa implementar um sistema embarcado utilizando a placa **BitDogLab** com o microcontrolador **RP2040**. O sistema envolve a comunicação serial via **UART e I2C**, controle de **LEDs RGB e WS2812**, interação por **botões físicos** e exibição de informações em um **display OLED SSD1306**.
