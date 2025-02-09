@@ -266,12 +266,14 @@ void gpio_irq_handler(uint gpio, uint32_t events)
             if(!state)
             {
                 printf("LED vermelho ligado\n");
+                ssd1306_fill(&ssd, false); // Limpa o display
                 ssd1306_draw_string(&ssd, "LED VERMELHO", 0, 0); // Desenha uma string
                 ssd1306_draw_string(&ssd, "LIGADO", 0, 20); // Desenha uma string
             }
             else
             {
                 printf("LED vermelho desligado\n");
+                ssd1306_fill(&ssd, false); // Limpa o display
                 ssd1306_draw_string(&ssd, "LED VERMELHO", 0, 0); // Desenha uma string
                 ssd1306_draw_string(&ssd, "DESLIGADO", 0, 20); // Desenha uma string
             }
@@ -285,12 +287,14 @@ void gpio_irq_handler(uint gpio, uint32_t events)
             if(!state)
             {
                 printf("LED azul ligado\n");
+                ssd1306_fill(&ssd, false); // Limpa o display
                 ssd1306_draw_string(&ssd, "LED AZUL     ", 0, 0); // Desenha uma string
                 ssd1306_draw_string(&ssd, "LIGADO", 0, 20); // Desenha uma string
             }
             else
             {
                 printf("LED azul desligado\n");
+                ssd1306_fill(&ssd, false); // Limpa o display
                 ssd1306_draw_string(&ssd, "LED AZUL     ", 0, 0); // Desenha uma string
                 ssd1306_draw_string(&ssd, "DESLIGADO", 0, 20); // Desenha uma string
             }
