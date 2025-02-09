@@ -4,7 +4,7 @@
 **Levi Silva Freitas**
 
 ## Data
-**02 de fevereiro de 2025**
+**09 de fevereiro de 2025**
 
 ## Link de entrega
 Link: https://youtube.com/shorts/EytLdvitqN0?feature=share
