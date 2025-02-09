@@ -1,9 +1,5 @@
 // Autor: Levi Silva Freitas
 // Data: 2025-02-02
-// Descrição: Programa para controlar uma matriz de LEDs WS2812B utilizando a placa Raspberry Pi Pico,
-//            além disso, o programa permite a seleção de um número de 0 a 9, que será exibido na matriz de LEDs,
-//            onde, a interação é feita através de dois botões, um para incrementar o número e outro para decrementar.
-//            Por fim, o programa também pisca um LED vermelho a cada 200 ms, indicando que o programa está em execução.
 
 // Inclusão de bibliotecas necessárias para o programa
 #include <stdio.h>                // Inclusão da biblioteca padrão de entrada e saída
