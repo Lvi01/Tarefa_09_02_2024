@@ -319,12 +319,22 @@ void set_led_pattern(uint8_t r, uint8_t g, uint8_t b, int displayed_number)
 }
 
 void processar_comando(char comando) {
+    if(!(comando >= '0' && comando <= '9' || comando >= 'A' && comando <= 'Z' || comando >= 'a' && comando <= 'z')) // Verifica se o comando é um número ou uma letra
+    {
+        printf("Char inválido\n"); // Exibe uma mensagem de erro
+        ssd1306_fill(&ssd, false); // Limpa o display
+        ssd1306_draw_string(&ssd, "ERRO", 0, 0); // Desenha uma string
+        ssd1306_draw_string(&ssd, "CHAR", 0, 20); // Desenha uma string
+        ssd1306_draw_string(&ssd, "INVALIDO", 0, 40); // Desenha uma string
+        ssd1306_send_data(&ssd); // Atualiza o display
+        return;
+    }
     printf("Char recebido: %c\n", comando); // Exibe o comando recebido
     ssd1306_fill(&ssd, false); // Limpa o display
     ssd1306_draw_string(&ssd, "CHAR RECEBIDO", 0, 0); // Desenha uma string
     ssd1306_draw_char(&ssd, comando, 60, 32); // Desenha um caractere
     ssd1306_send_data(&ssd); // Atualiza o display
-    if(comando > '0' && comando < '9') // Verifica se o comando é um número
+    if(comando >= '0' && comando <= '9') // Verifica se o comando é um número
     {
         switch(comando)
         {
